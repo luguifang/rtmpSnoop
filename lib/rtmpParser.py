@@ -21,7 +21,7 @@
 # 02110-1301 USA
 #
 import struct
-import Utils
+from lib.Utils import str2num
 from lib.Stream import Stream
 from lib.amfCommand import amfCommand, amfCommands
 from lib.Logger import logger
@@ -90,15 +90,15 @@ class rtmpParser():
 
         #Header type b00
         if header_type == 0:
-            timestamp = Utils.str2num(stream.getBytes(3))
-            body_size = Utils.str2num(stream.getBytes(3))
+            timestamp = str2num(stream.getBytes(3))
+            body_size = str2num(stream.getBytes(3))
             packet_type = stream.getByte()
-            stream_id = Utils.str2num(stream.getBytes(4))
+            stream_id = str2num(stream.getBytes(4))
         
         #Header type b01
         elif header_type == 1:
-            timestamp = Utils.str2num(stream.getBytes(3))
-            body_size = Utils.str2num(stream.getBytes(3))
+            timestamp = str2num(stream.getBytes(3))
+            body_size = str2num(stream.getBytes(3))
             packet_type = stream.getByte()
 
             """ 
@@ -191,7 +191,7 @@ class rtmpParser():
 
         #STRING
         if (b == self.AMF_STRING):
-            strlen =  Utils.str2num(p.getBytes(2))
+            strlen =  str2num(p.getBytes(2))
             string = p.getBytes(strlen)
             logger.debug("Found a string [%s]..." % string)
             return string
@@ -218,7 +218,7 @@ class rtmpParser():
             while (p.readBytes(3) != "\x00\x00\x09"):
                 
                 #Property name
-                strlen =  Utils.str2num(p.getBytes(2))
+                strlen =  str2num(p.getBytes(2))
                 key = p.getBytes(strlen)
                 logger.debug("Property name [%s]..." % key)
 
@@ -240,7 +240,7 @@ class rtmpParser():
         #ARRAY
         #I don't care about it...
         elif (b == self.AMF_ARRAY):
-            arraylen =  Utils.str2num(p.getBytes(4))
+            arraylen =  str2num(p.getBytes(4))
             logger.debug("Found an array...")
             while (p.readBytes(3) != "\x00\x00\x09"):
                 pass
